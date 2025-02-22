@@ -1,5 +1,5 @@
 {
-  "name": "rn-nepali-date-picker",
+  "name": "rn-nepali-calendar-picker",
   "version": "0.0.1",
   "description": "Nepali Calendar and Datepicker for React-Native Apps",
   "source": "./src/index.tsx",
@@ -37,7 +37,7 @@
     "!**/.*"
   ],
   "scripts": {
-    "example": "yarn workspace rn-nepali-date-picker-example",
+    "example": "yarn workspace rn-nepali-calendar-picker-example",
     "test": "jest",
     "typecheck": "tsc",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
@@ -52,14 +52,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sabinpandey7/rn-nepali-date-picker.git"
+    "url": "git+https://github.com/sabinpandey7/rn-nepali-calendar-picker.git"
   },
   "author": "sabinpandey <pandeysabin2058@gmail.com> (https://github.com/sabinpandey7)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/sabinpandey7/rn-nepali-date-picker/issues"
+    "url": "https://github.com/sabinpandey7/rn-nepali-calendar-picker/issues"
   },
-  "homepage": "https://github.com/sabinpandey7/rn-nepali-date-picker#readme",
+  "homepage": "https://github.com/sabinpandey7/rn-nepali-calendar-picker#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },

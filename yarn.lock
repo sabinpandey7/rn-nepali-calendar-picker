@@ -12984,9 +12984,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rn-nepali-date-picker-example@workspace:example":
+"rn-nepali-calendar-picker-example@workspace:example":
   version: 0.0.0-use.local
-  resolution: "rn-nepali-date-picker-example@workspace:example"
+  resolution: "rn-nepali-calendar-picker-example@workspace:example"
   dependencies:
     "@babel/core": ^7.20.0
     "@expo/metro-runtime": ~4.0.1
@@ -13000,9 +13000,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"rn-nepali-date-picker@workspace:.":
+"rn-nepali-calendar-picker@workspace:.":
   version: 0.0.0-use.local
-  resolution: "rn-nepali-date-picker@workspace:."
+  resolution: "rn-nepali-calendar-picker@workspace:."
   dependencies:
     "@commitlint/config-conventional": ^17.0.2
     "@evilmartians/lefthook": ^1.5.0

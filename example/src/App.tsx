@@ -1,4 +1,4 @@
-import { Datepicker, NepaliDate } from 'rn-nepali-date-picker';
+import { Datepicker, NepaliDate } from 'rn-nepali-calendar-picker';
 import { Text, StyleSheet, SafeAreaView, Button } from 'react-native';
 import { useMemo, useState } from 'react';
 

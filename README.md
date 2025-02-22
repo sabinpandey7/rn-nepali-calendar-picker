@@ -1,20 +1,20 @@
-# rn-nepali-date-picker
+# rn-nepali-calendar-picker
 
 # 📅 React Native Nepali Datepicker
 
-**rn-nepali-date-picker** is a React Native library for selecting dates in the **Nepali Bikram Sambat (BS) calendar**. It provides a date picker component and utilities for BS-AD date conversion.
+**rn-nepali-calendar-picker** is a React Native library for selecting dates in the **Nepali Bikram Sambat (BS) calendar**. It provides a date picker component and utilities for BS-AD date conversion.
 
 Using **npm**:
 
 ```sh
-npm install rn-nepali-date-picker
+npm install rn-nepali-calendar-picker
 
 ```
 
 ## Usage
 
 ```js
-import { Datepicker, NepaliDate } from 'rn-nepali-date-picker';
+import { Datepicker, NepaliDate } from 'rn-nepali-calendar-picker';
 import { Text, StyleSheet, SafeAreaView, Button } from 'react-native';
 import { useMemo, useState } from 'react';
 
@@ -70,7 +70,7 @@ The `<Datepicker />` component accepts the following props:
 The `NepaliDate` class helps in creating and managing Nepali (Bikram Sambat) dates. It provides utility methods to convert between **BS and AD**, format dates, and manipulate them.
 
 ```tsx
-import { NepaliDate } from 'rn-nepali-date-picker';
+import { NepaliDate } from 'rn-nepali-calendar-picker';
 
 const date1 = new NepaliDate(); // Initializes with the current Nepali date
 const date2 = new NepaliDate('2080-12-15'); // Initializes using BS date string currently support yyyy-mm-dd only
