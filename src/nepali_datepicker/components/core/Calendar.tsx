@@ -42,12 +42,21 @@ const CalendarContainer = () => {
 const Calendar = ({
   date,
   onDateSelect,
+  maxDate,
+  minDate,
 }: {
   date: NepaliDate;
+  minDate?: NepaliDate;
+  maxDate?: NepaliDate;
   onDateSelect: (date: NepaliDate) => any;
 }) => {
   return (
-    <CalendarContextProvider selectedDate={date} onDateSelect={onDateSelect}>
+    <CalendarContextProvider
+      minDate={minDate}
+      maxDate={maxDate}
+      selectedDate={date}
+      onDateSelect={onDateSelect}
+    >
       <CalendarContainer />
     </CalendarContextProvider>
   );

@@ -1,22 +1,27 @@
 import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { theme } from '../utlis/colors';
 
+export interface IDay {
+  day: number;
+  isSelected: boolean;
+  isToday: boolean;
+  isDisabled: boolean;
+}
+
 const Day = ({
   day,
   isSelected,
   isToday,
   onSelect,
-}: {
-  day: number;
-  isSelected: boolean;
-  isToday: boolean;
+  isDisabled,
+}: IDay & {
   onSelect: (day: number) => void;
 }) => {
   const OS = Platform.OS === 'ios' ? 'ios' : 'android';
 
   return (
     <Pressable
-      disabled={isSelected}
+      disabled={isSelected || isDisabled}
       onPress={() => onSelect(day)}
       style={{ width: '14.28%', padding: 4 }}
     >
@@ -39,7 +44,13 @@ const Day = ({
         <Text
           style={[
             styles.label,
-            { color: isSelected ? 'white' : theme[OS].textColor },
+            {
+              color: isDisabled
+                ? 'grey'
+                : isSelected
+                  ? 'white'
+                  : theme[OS].textColor,
+            },
           ]}
         >
           {day ? day : ''}

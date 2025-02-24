@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native';
 import { useCallback, useContext, useMemo } from 'react';
-import Day from './Day';
+import Day, { type IDay } from './Day';
 import { calendarData } from '../../../lib/nepali_date/data/calendar';
 import { CalendarContext } from '../context/CalendarContext';
 import NepaliDate from '../../../lib/nepali_date/nepali_date';
@@ -20,6 +20,8 @@ const DaySelector = ({ activeMonth }: { activeMonth: number }) => {
     state: { activeYear, today },
     onDateSelect,
     selectedDate,
+    minDate,
+    maxDate,
   } = useContext(CalendarContext);
 
   const OS = Platform.OS === 'ios' ? 'ios' : 'android';
@@ -33,12 +35,22 @@ const DaySelector = ({ activeMonth }: { activeMonth: number }) => {
 
     let i = 0;
     for (; i < firstDayofWeek; i++) {
-      const item = { day: 0, isSelected: false, isToday: false };
+      const item = {
+        day: 0,
+        isSelected: false,
+        isToday: false,
+        isDisabled: false,
+      };
       array.push(item);
     }
 
     for (i = 1; i <= numofdays; i++) {
-      const item = { day: i, isSelected: false, isToday: false };
+      const item = {
+        day: i,
+        isSelected: false,
+        isToday: false,
+        isDisabled: false,
+      };
 
       if (
         selectedDate?.getYear() === activeYear &&
@@ -55,10 +67,23 @@ const DaySelector = ({ activeMonth }: { activeMonth: number }) => {
         item.isToday = true;
       }
 
+      if (
+        minDate &&
+        new NepaliDate(activeYear, activeMonth, i).isGreater(minDate)
+      ) {
+        item.isDisabled = true;
+      }
+      if (
+        maxDate &&
+        new NepaliDate(activeYear, activeMonth, i).isSmaller(maxDate)
+      ) {
+        item.isDisabled = true;
+      }
+
       array.push(item);
     }
     return array;
-  }, [activeYear, activeMonth, selectedDate, today]);
+  }, [activeYear, activeMonth, selectedDate, today, maxDate, minDate]);
 
   const onDayClick = useCallback(
     (day: number) => {
@@ -68,19 +93,14 @@ const DaySelector = ({ activeMonth }: { activeMonth: number }) => {
   );
 
   const renderDay = useCallback(
-    ({
-      item,
-    }: ListRenderItemInfo<{
-      day: number;
-      isSelected: boolean;
-      isToday: boolean;
-    }>) => {
+    ({ item }: ListRenderItemInfo<IDay>) => {
       return (
         <Day
           onSelect={onDayClick}
           day={item.day}
           isSelected={item.isSelected}
           isToday={item.isToday}
+          isDisabled={item.isDisabled}
         />
       );
     },

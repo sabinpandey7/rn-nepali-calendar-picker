@@ -17,6 +17,8 @@ export interface NepaliDatePickerProps {
   date: NepaliDate;
   onApply: (date: NepaliDate) => void;
   onClose: () => any;
+  minDate?: NepaliDate;
+  maxDate?: NepaliDate;
 }
 
 const Datepicker = ({
@@ -24,6 +26,8 @@ const Datepicker = ({
   date,
   onApply,
   onClose,
+  minDate,
+  maxDate,
 }: NepaliDatePickerProps) => {
   const [selectedDate, setSelectedDate] = useState(date);
 
@@ -84,6 +88,8 @@ const Datepicker = ({
             >
               <Calendar
                 date={selectedDate}
+                minDate={minDate}
+                maxDate={maxDate}
                 onDateSelect={(d) => setSelectedDate(d)}
               />
               <Footer onApply={() => onApply(selectedDate)} onClose={onClose} />

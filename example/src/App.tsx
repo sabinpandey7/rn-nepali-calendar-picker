@@ -3,7 +3,7 @@ import { Text, StyleSheet, SafeAreaView, Button } from 'react-native';
 import { useMemo, useState } from 'react';
 
 export default function App() {
-  const [date, setDate] = useState(new Date('2025-02-03'));
+  const [date, setDate] = useState(new Date('2025-02-24'));
 
   const [open, setOpen] = useState(false);
   const nepali_date = useMemo(() => NepaliDate.fromJSDate(date), [date]);
@@ -18,6 +18,8 @@ export default function App() {
         onApply={(new_date) => setDate(new_date.ad_date)}
         onClose={() => setOpen(false)}
         date={nepali_date}
+        minDate={new NepaliDate('2081-11-05')}
+        maxDate={new NepaliDate('2081-11-20')}
       />
     </SafeAreaView>
   );

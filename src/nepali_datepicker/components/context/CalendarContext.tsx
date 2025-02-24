@@ -14,6 +14,8 @@ type ContextType = {
   dispatch: React.Dispatch<CalendarActions>;
   onDateSelect: (date: NepaliDate) => any;
   selectedDate: NepaliDate | null;
+  maxDate?: NepaliDate;
+  minDate?: NepaliDate;
 };
 
 export const CalendarContext = createContext<ContextType>({
@@ -34,9 +36,13 @@ const CalendarContextProvider = ({
   children,
   selectedDate,
   onDateSelect,
+  minDate,
+  maxDate,
 }: PropsWithChildren<{
   selectedDate: NepaliDate;
   onDateSelect: (date: NepaliDate) => any;
+  minDate?: NepaliDate;
+  maxDate?: NepaliDate;
 }>) => {
   const [state, dispatch] = useReducer(reducer, {
     activeMonth: selectedDate.getMonth(),
@@ -47,7 +53,7 @@ const CalendarContextProvider = ({
 
   return (
     <CalendarContext.Provider
-      value={{ state, dispatch, onDateSelect, selectedDate }}
+      value={{ state, dispatch, onDateSelect, selectedDate, minDate, maxDate }}
     >
       {children}
     </CalendarContext.Provider>
