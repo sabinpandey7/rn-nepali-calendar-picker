@@ -78,5 +78,35 @@ describe('Testing Nepali Date', () => {
     expect(nepali_date.isEqual(new NepaliDate(2081, 10, 21))).toBeFalsy();
     expect(nepali_date.isEqual(new NepaliDate(2081, 11, 20))).toBeFalsy();
     expect(nepali_date.isEqual(new NepaliDate(2080, 10, 20))).toBeFalsy();
+
+    expect(nepali_date.isGreater(new NepaliDate(2081, 10, 21))).toBeTruthy();
+    expect(nepali_date.isGreater(new NepaliDate(2081, 11, 20))).toBeTruthy();
+    expect(nepali_date.isGreater(new NepaliDate(2082, 1, 20))).toBeTruthy();
+    expect(nepali_date.isGreater(new NepaliDate(2080, 11, 21))).toBeFalsy();
+    expect(nepali_date.isGreater(new NepaliDate(2080, 8, 22))).toBeFalsy();
+    expect(nepali_date.isGreater(nepali_date)).toBeFalsy();
+
+    expect(nepali_date.isSmaller(new NepaliDate(2081, 10, 21))).toBeFalsy();
+    expect(nepali_date.isSmaller(new NepaliDate(2081, 11, 20))).toBeFalsy();
+    expect(nepali_date.isSmaller(new NepaliDate(2082, 1, 20))).toBeFalsy();
+    expect(nepali_date.isSmaller(new NepaliDate(2080, 11, 21))).toBeTruthy();
+    expect(nepali_date.isSmaller(new NepaliDate(2080, 8, 22))).toBeTruthy();
+    expect(nepali_date.isSmaller(nepali_date)).toBeFalsy();
+
+    expect(nepali_date.difference(new NepaliDate(2081, 11, 12))).toEqual(
+      1900800000
+    );
+    expect(nepali_date.difference(new NepaliDate(2081, 10, 22))).toEqual(
+      172800000
+    );
+    expect(nepali_date.difference(new NepaliDate(2081, 10, 21))).toEqual(
+      86400000
+    );
+    expect(nepali_date.difference(new NepaliDate(2081, 10, 18))).toEqual(
+      -172800000
+    );
+    expect(nepali_date.difference(new NepaliDate(2081, 10, 19))).toEqual(
+      -86400000
+    );
   });
 });

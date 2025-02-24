@@ -91,6 +91,35 @@ class NepaliDate {
       date.getYear() === this.getYear()
     );
   }
+  isGreater(compareDate: NepaliDate) {
+    const { year, month, date } = compareDate.getDateObject();
+
+    if (year === this.year) {
+      if (month === this.month) {
+        return this.date < date;
+      }
+      return this.month < month;
+    }
+
+    return this.year < year;
+  }
+
+  isSmaller(compareDate: NepaliDate) {
+    const { year, month, date } = compareDate.getDateObject();
+
+    if (year === this.year) {
+      if (month === this.month) {
+        return this.date > date;
+      }
+      return this.month > month;
+    }
+
+    return this.year > year;
+  }
+
+  difference(compareDate: NepaliDate) {
+    return compareDate.ad_date.getTime() - this.ad_date.getTime();
+  }
 
   //   factory methods
   static fromJSDate(date: Date) {
