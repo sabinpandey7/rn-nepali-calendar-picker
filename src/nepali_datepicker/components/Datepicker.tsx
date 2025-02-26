@@ -23,7 +23,7 @@ interface SingleNepaliDatePickerProps
 interface MultiNepaliDatePickerProps
   extends Omit<ICalendarProps, 'onDateSelect'> {
   open: boolean;
-  mode: 'multi';
+  mode: 'multi' | 'range';
   onClose: () => any;
   onApply: (dates: Array<NepaliDate>) => void;
 }
@@ -65,6 +65,18 @@ const Datepicker = ({
             return [...p, new_date];
           }
         });
+      } else if (mode === 'range') {
+        setSelectedDates((p) => {
+          if (p.length === 0) {
+            return [new_date];
+          } else if (p.length === 1) {
+            if (p[0]?.isSmaller(new_date)) {
+              return [new_date];
+            }
+            return [...p, new_date];
+          }
+          return [new_date];
+        });
       } else {
         setSelectedDate(new_date);
       }
@@ -99,7 +111,7 @@ const Datepicker = ({
               {
                 backgroundColor: theme[OS].backgroundColor || 'white',
                 flexDirection: width > 700 ? 'row' : 'column',
-                maxHeight: OS === 'ios' ? 400 : 500,
+                maxHeight: OS === 'ios' ? 420 : 540,
               },
             ]}
           >

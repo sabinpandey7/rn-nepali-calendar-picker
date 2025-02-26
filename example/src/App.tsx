@@ -5,14 +5,15 @@ import { useState } from 'react';
 export default function App() {
   const [nepali_date, setNepaliDate] = useState<NepaliDate>(new NepaliDate());
   const [nepali_dates, setNepaliDates] = useState<NepaliDate[]>([]);
+  const [dates_range, setDateRange] = useState<NepaliDate[]>([]);
 
   const [open, setOpen] = useState<boolean>(false);
   const [openMulti, setOpenMulti] = useState<boolean>(false);
+  const [openRange, setOpenRange] = useState<boolean>(false);
 
   return (
     <SafeAreaView style={styles.screen}>
-      <Text>{nepali_date.toFormat('WW,YYYY MMMM DD')}</Text>
-      <Text>{nepali_date.ad_date.toDateString()}</Text>
+      <Text>{nepali_date.toString()}</Text>
       <Button title="Open Datepicker" onPress={() => setOpen(true)} />
       <Datepicker
         open={open}
@@ -36,6 +37,22 @@ export default function App() {
         onClose={() => setOpenMulti(false)}
         dates={nepali_dates}
         mode="multi"
+        minDate={new NepaliDate()}
+      />
+      <Text>Range Picker</Text>
+      {dates_range?.map((value, index) => (
+        <Text key={index}>{value.toString()}</Text>
+      ))}
+      <Button
+        title="Open Range Datepicker"
+        onPress={() => setOpenRange(true)}
+      />
+      <Datepicker
+        open={openRange}
+        onApply={(dates) => setDateRange(dates)}
+        onClose={() => setOpenRange(false)}
+        dates={dates_range}
+        mode="range"
         minDate={new NepaliDate()}
       />
     </SafeAreaView>

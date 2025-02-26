@@ -10,7 +10,7 @@ function Footer({
   onApply: () => any;
   onClose: () => any;
   onClear: () => any;
-  mode: 'single' | 'multi';
+  mode: 'single' | 'multi' | 'range';
 }) {
   const OS = Platform.OS === 'ios' ? 'ios' : 'android';
 

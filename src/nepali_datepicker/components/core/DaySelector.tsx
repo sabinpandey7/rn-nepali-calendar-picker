@@ -42,6 +42,9 @@ const DaySelector = ({ activeMonth }: { activeMonth: number }) => {
         isSelected: false,
         isToday: false,
         isDisabled: false,
+        isBetween: false,
+        isStartDate: false,
+        isEndDate: false,
       };
       array.push(item);
     }
@@ -52,11 +55,34 @@ const DaySelector = ({ activeMonth }: { activeMonth: number }) => {
         isSelected: false,
         isToday: false,
         isDisabled: false,
+        isBetween: false,
+        isStartDate: false,
+        isEndDate: false,
       };
 
       const nepali_date_item = new NepaliDate(activeYear, activeMonth, i);
-
-      if (mode === 'multi') {
+      if (mode === 'range') {
+        dates?.forEach((element, index) => {
+          if (nepali_date_item.isEqual(element)) {
+            if (index === 0) {
+              item.isStartDate = true;
+            } else {
+              item.isEndDate = true;
+            }
+            item.isSelected = true;
+          }
+        });
+        if (dates && dates.length > 1) {
+          if (dates[0] && dates[1]) {
+            if (
+              nepali_date_item.isSmaller(dates[0]) &&
+              nepali_date_item.isGreater(dates[1])
+            ) {
+              item.isBetween = true;
+            }
+          }
+        }
+      } else if (mode === 'multi') {
         dates?.forEach((element) => {
           if (nepali_date_item.isEqual(element)) {
             item.isSelected = true;
@@ -100,6 +126,9 @@ const DaySelector = ({ activeMonth }: { activeMonth: number }) => {
           isSelected={item.isSelected}
           isToday={item.isToday}
           isDisabled={item.isDisabled}
+          isBetween={item.isBetween}
+          isStartDate={item.isStartDate}
+          isEndDate={item.isEndDate}
         />
       );
     },

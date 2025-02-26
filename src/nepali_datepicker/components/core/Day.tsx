@@ -6,6 +6,9 @@ export interface IDay {
   isSelected: boolean;
   isToday: boolean;
   isDisabled: boolean;
+  isBetween: boolean;
+  isStartDate: boolean;
+  isEndDate: boolean;
 }
 
 const Day = ({
@@ -14,16 +17,24 @@ const Day = ({
   isToday,
   onSelect,
   isDisabled,
+  isBetween,
+  isStartDate,
+  isEndDate,
 }: IDay & {
   onSelect: (day: number) => void;
 }) => {
   const OS = Platform.OS === 'ios' ? 'ios' : 'android';
 
+  console.log(theme[OS].rangeBackground);
   return (
     <Pressable
       disabled={isDisabled}
       onPress={() => onSelect(day)}
-      style={{ width: '14.28%', padding: 4 }}
+      style={{
+        width: '14.28%',
+        backgroundColor: isBetween ? theme[OS].rangeBackground : undefined,
+        marginVertical: 2,
+      }}
     >
       <View
         style={[
@@ -37,7 +48,9 @@ const Day = ({
                 ? 'white'
                 : isSelected
                   ? theme[OS].primary
-                  : 'transparent',
+                  : isBetween
+                    ? theme[OS].rangeBackground
+                    : 'transparent',
           },
         ]}
       >
@@ -56,6 +69,18 @@ const Day = ({
           {day ? day : ''}
         </Text>
       </View>
+      {(isStartDate || isEndDate) && (
+        <View
+          style={{
+            backgroundColor: theme[OS].rangeBackground,
+            width: '50%',
+            height: '100%',
+            position: 'absolute',
+            zIndex: -1,
+            right: isStartDate ? 0 : undefined,
+          }}
+        />
+      )}
     </Pressable>
   );
 };

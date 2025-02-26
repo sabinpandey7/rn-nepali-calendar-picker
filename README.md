@@ -79,16 +79,16 @@ const styles = StyleSheet.create({
 
 The `<Datepicker />` component accepts the following props:
 
-| Prop Name | Type                                       | Required | Default  | Description                                                                                                             |
-| --------- | ------------------------------------------ | -------- | -------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `open`    | `boolean`                                  | ✅       | `false`  | Controls the visibility of the datepicker. Set `true` to open.                                                          |
-| `onApply` | `(date: NepaliDate\|NepaliDate[]) => void` | ✅       | -        | Callback function when a date is selected. The returned Nepali Date Object or array on Nepali Date object based on mode |
-| `onClose` | `() => void`                               | ✅       | -        | Callback function triggered when the datepicker is closed.                                                              |
-| `mode`    | `single \| multi`                          |          | `single` | Datepicker mode                                                                                                         |
-| `date`    | `NepaliDate`                               |          | -        | Initial selected date in **Bikram Sambat (BS)** format.                                                                 |
-| `dates`   | `NepaliDate[]`                             |          | []       | Intial selected dates for multi mode                                                                                    |
-| `minDate` | `NepaliDate`                               |          | -        | Min Date                                                                                                                |
-| `maxDate` | `NepaliDate`                               |          | -        | Min Date                                                                                                                |
+| Prop Name | Type                                       | Required | Default  | Description                                                                                                              |
+| --------- | ------------------------------------------ | -------- | -------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `open`    | `boolean`                                  | ✅       | `false`  | Controls the visibility of the datepicker. Set `true` to open.                                                           |
+| `onApply` | `(date: NepaliDate\|NepaliDate[]) => void` | ✅       | -        | Callback function after clicking confirm . This returned Nepali Date Object or array of Nepali Date object based on mode |
+| `onClose` | `() => void`                               | ✅       | -        | Callback function triggered when the datepicker is closed.                                                               |
+| `mode`    | `single \| multi \| range`                 |          | `single` | Datepicker mode                                                                                                          |
+| `date`    | `NepaliDate`                               |          | -        | Initial selected date in **Bikram Sambat (BS)** format.                                                                  |
+| `dates`   | `NepaliDate[]`                             |          | []       | Intial selected dates for multi mode                                                                                     |
+| `minDate` | `NepaliDate`                               |          | -        | Min Date                                                                                                                 |
+| `maxDate` | `NepaliDate`                               |          | -        | Max Date                                                                                                                 |
 
 ## 📖 NepaliDate Class
 
