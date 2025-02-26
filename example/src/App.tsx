@@ -1,12 +1,13 @@
 import { Datepicker, NepaliDate } from 'rn-nepali-calendar-picker';
 import { Text, StyleSheet, SafeAreaView, Button } from 'react-native';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 
 export default function App() {
-  const [date, setDate] = useState(new Date('2025-02-24'));
+  const [nepali_date, setNepaliDate] = useState<NepaliDate>(new NepaliDate());
+  const [nepali_dates, setNepaliDates] = useState<NepaliDate[]>([]);
 
-  const [open, setOpen] = useState(false);
-  const nepali_date = useMemo(() => NepaliDate.fromJSDate(date), [date]);
+  const [open, setOpen] = useState<boolean>(false);
+  const [openMulti, setOpenMulti] = useState<boolean>(false);
 
   return (
     <SafeAreaView style={styles.screen}>
@@ -15,11 +16,27 @@ export default function App() {
       <Button title="Open Datepicker" onPress={() => setOpen(true)} />
       <Datepicker
         open={open}
-        onApply={(new_date) => setDate(new_date.ad_date)}
+        onApply={(date) => setNepaliDate(date)}
         onClose={() => setOpen(false)}
         date={nepali_date}
-        minDate={new NepaliDate('2081-11-05')}
-        maxDate={new NepaliDate('2081-11-20')}
+        mode="single"
+        minDate={new NepaliDate()}
+      />
+      <Text>Multples Dates</Text>
+      {nepali_dates?.map((value, index) => (
+        <Text key={index}>{value.toString()}</Text>
+      ))}
+      <Button
+        title="Open Multi Datepicker"
+        onPress={() => setOpenMulti(true)}
+      />
+      <Datepicker
+        open={openMulti}
+        onApply={(dates) => setNepaliDates(dates)}
+        onClose={() => setOpenMulti(false)}
+        dates={nepali_dates}
+        mode="multi"
+        minDate={new NepaliDate()}
       />
     </SafeAreaView>
   );
@@ -36,5 +53,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 16,
+    gap: 16,
   },
 });

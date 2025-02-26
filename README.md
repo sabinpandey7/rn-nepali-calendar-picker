@@ -16,24 +16,43 @@ npm install rn-nepali-calendar-picker
 ```js
 import { Datepicker, NepaliDate } from 'rn-nepali-calendar-picker';
 import { Text, StyleSheet, SafeAreaView, Button } from 'react-native';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 
 export default function App() {
-  const [date, setDate] = useState(new Date('2025-02-03'));
+  const [nepali_date, setNepaliDate] = useState<NepaliDate>(new NepaliDate());
+  const [nepali_dates, setNepaliDates] = useState<NepaliDate[]>([]);
 
-  const [open, setOpen] = useState(false);
-  const nepali_date = useMemo(() => NepaliDate.fromJSDate(date), [date]);
+  const [open, setOpen] = useState<boolean>(false);
+  const [openMulti, setOpenMulti] = useState<boolean>(false);
 
   return (
     <SafeAreaView style={styles.screen}>
       <Text>{nepali_date.toFormat('WW,YYYY MMMM DD')}</Text>
       <Text>{nepali_date.ad_date.toDateString()}</Text>
-      <Button title="Open Datepicker" onPress={() => setOpen(true)}></Button>
+      <Button title="Open Datepicker" onPress={() => setOpen(true)} />
       <Datepicker
         open={open}
-        onApply={(date) => setDate(date.ad_date)}
+        onApply={(date) => setNepaliDate(date)}
         onClose={() => setOpen(false)}
         date={nepali_date}
+        mode="single"
+        minDate={new NepaliDate()}
+      />
+      <Text>Multples Dates</Text>
+      {nepali_dates?.map((value, index) => (
+        <Text key={index}>{value.toString()}</Text>
+      ))}
+      <Button
+        title="Open Multi Datepicker"
+        onPress={() => setOpenMulti(true)}
+      />
+      <Datepicker
+        open={openMulti}
+        onApply={(dates) => setNepaliDates(dates)}
+        onClose={() => setOpenMulti(false)}
+        dates={nepali_dates}
+        mode="multi"
+        minDate={new NepaliDate()}
       />
     </SafeAreaView>
   );
@@ -50,20 +69,26 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 16,
+    gap: 16,
   },
 });
+
 ```
 
 ## ⚙️ Props
 
 The `<Datepicker />` component accepts the following props:
 
-| Prop Name | Type                         | Required | Default | Description                                                                |
-| --------- | ---------------------------- | -------- | ------- | -------------------------------------------------------------------------- |
-| `open`    | `boolean`                    | ✅       | `false` | Controls the visibility of the datepicker. Set `true` to open.             |
-| `onApply` | `(date: NepaliDate) => void` | ✅       | -       | Callback function when a date is selected. The returned Nepali Date Object |
-| `onClose` | `() => void`                 | ✅       | -       | Callback function triggered when the datepicker is closed.                 |
-| `date`    | `NepaliDate`                 | ✅       | -       | Initial selected date in **Bikram Sambat (BS)** format.                    |
+| Prop Name | Type                                       | Required | Default  | Description                                                                                                             |
+| --------- | ------------------------------------------ | -------- | -------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `open`    | `boolean`                                  | ✅       | `false`  | Controls the visibility of the datepicker. Set `true` to open.                                                          |
+| `onApply` | `(date: NepaliDate\|NepaliDate[]) => void` | ✅       | -        | Callback function when a date is selected. The returned Nepali Date Object or array on Nepali Date object based on mode |
+| `onClose` | `() => void`                               | ✅       | -        | Callback function triggered when the datepicker is closed.                                                              |
+| `mode`    | `single \| multi`                          |          | `single` | Datepicker mode                                                                                                         |
+| `date`    | `NepaliDate`                               |          | -        | Initial selected date in **Bikram Sambat (BS)** format.                                                                 |
+| `dates`   | `NepaliDate[]`                             |          | []       | Intial selected dates for multi mode                                                                                    |
+| `minDate` | `NepaliDate`                               |          | -        | Min Date                                                                                                                |
+| `maxDate` | `NepaliDate`                               |          | -        | Min Date                                                                                                                |
 
 ## 📖 NepaliDate Class
 

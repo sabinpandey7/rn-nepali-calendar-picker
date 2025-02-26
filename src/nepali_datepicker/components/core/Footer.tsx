@@ -4,9 +4,13 @@ import { theme } from '../utlis/colors';
 function Footer({
   onApply,
   onClose,
+  onClear,
+  mode,
 }: {
   onApply: () => any;
   onClose: () => any;
+  onClear: () => any;
+  mode: 'single' | 'multi';
 }) {
   const OS = Platform.OS === 'ios' ? 'ios' : 'android';
 
@@ -21,6 +25,19 @@ function Footer({
         gap: 32,
       }}
     >
+      {mode === 'multi' && (
+        <Pressable onPress={onClear}>
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: 500,
+              color: theme[OS].primary,
+            }}
+          >
+            Clear
+          </Text>
+        </Pressable>
+      )}
       <Pressable onPress={onClose}>
         <Text
           style={{

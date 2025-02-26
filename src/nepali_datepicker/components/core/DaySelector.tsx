@@ -19,9 +19,11 @@ const DaySelector = ({ activeMonth }: { activeMonth: number }) => {
   const {
     state: { activeYear, today },
     onDateSelect,
-    selectedDate,
+    date,
     minDate,
     maxDate,
+    dates,
+    mode,
   } = useContext(CalendarContext);
 
   const OS = Platform.OS === 'ios' ? 'ios' : 'android';
@@ -52,38 +54,35 @@ const DaySelector = ({ activeMonth }: { activeMonth: number }) => {
         isDisabled: false,
       };
 
-      if (
-        selectedDate?.getYear() === activeYear &&
-        selectedDate?.getMonth() === activeMonth &&
-        i === selectedDate?.getDate()
-      ) {
-        item.isSelected = true;
+      const nepali_date_item = new NepaliDate(activeYear, activeMonth, i);
+
+      if (mode === 'multi') {
+        dates?.forEach((element) => {
+          if (nepali_date_item.isEqual(element)) {
+            item.isSelected = true;
+          }
+        });
+      } else {
+        if (date && nepali_date_item.isEqual(date)) {
+          item.isSelected = true;
+        }
       }
-      if (
-        activeYear === today.getYear() &&
-        activeMonth === today.getMonth() &&
-        i === today.getDate()
-      ) {
+
+      if (nepali_date_item.isEqual(today)) {
         item.isToday = true;
       }
 
-      if (
-        minDate &&
-        new NepaliDate(activeYear, activeMonth, i).isGreater(minDate)
-      ) {
+      if (minDate && nepali_date_item.isGreater(minDate)) {
         item.isDisabled = true;
       }
-      if (
-        maxDate &&
-        new NepaliDate(activeYear, activeMonth, i).isSmaller(maxDate)
-      ) {
+      if (maxDate && nepali_date_item.isSmaller(maxDate)) {
         item.isDisabled = true;
       }
 
       array.push(item);
     }
     return array;
-  }, [activeYear, activeMonth, selectedDate, today, maxDate, minDate]);
+  }, [activeYear, activeMonth, dates, date, today, maxDate, minDate, mode]);
 
   const onDayClick = useCallback(
     (day: number) => {

@@ -1,6 +1,7 @@
 import { type PropsWithChildren, createContext, useReducer } from 'react';
 import NepaliDate from '../../../lib/nepali_date/nepali_date';
 import { type CalendarActions, reducer } from './CalendarReducer';
+import type { ICalendarProps } from '../core/Calendar';
 
 export type IntialStateType = {
   today: NepaliDate;
@@ -9,51 +10,54 @@ export type IntialStateType = {
   activeYear: number;
 };
 
-type ContextType = {
+interface IContext extends ICalendarProps {
   state: IntialStateType;
   dispatch: React.Dispatch<CalendarActions>;
-  onDateSelect: (date: NepaliDate) => any;
-  selectedDate: NepaliDate | null;
-  maxDate?: NepaliDate;
-  minDate?: NepaliDate;
-};
+}
 
-export const CalendarContext = createContext<ContextType>({
+export const CalendarContext = createContext<IContext>({
   state: {
     activeMonth: 1,
     activeYear: 1975,
     today: new NepaliDate(),
     view: 'day',
   },
+  mode: 'single',
   onDateSelect: (date: NepaliDate) => {
     console.log(date);
   },
-  selectedDate: null,
+  date: new NepaliDate(),
   dispatch: () => {},
 });
 
 const CalendarContextProvider = ({
   children,
-  selectedDate,
+  date = new NepaliDate(),
   onDateSelect,
   minDate,
   maxDate,
-}: PropsWithChildren<{
-  selectedDate: NepaliDate;
-  onDateSelect: (date: NepaliDate) => any;
-  minDate?: NepaliDate;
-  maxDate?: NepaliDate;
-}>) => {
+  mode = 'single',
+  dates,
+}: PropsWithChildren<ICalendarProps>) => {
   const [state, dispatch] = useReducer(reducer, {
-    activeMonth: selectedDate.getMonth(),
-    activeYear: selectedDate.getYear(),
+    activeMonth: date?.getMonth(),
+    activeYear: date?.getYear(),
     today: new NepaliDate(),
     view: 'day',
   });
 
   return (
     <CalendarContext.Provider
-      value={{ state, dispatch, onDateSelect, selectedDate, minDate, maxDate }}
+      value={{
+        state,
+        dispatch,
+        onDateSelect,
+        date,
+        minDate,
+        maxDate,
+        mode,
+        dates,
+      }}
     >
       {children}
     </CalendarContext.Provider>

@@ -6,30 +6,44 @@ import {
   View,
   useWindowDimensions,
 } from 'react-native';
-import { memo, useEffect, useState } from 'react';
-import Calendar from './core/Calendar';
+import { memo, useCallback, useEffect, useState } from 'react';
+import Calendar, { type ICalendarProps } from './core/Calendar';
 import NepaliDate from '../../lib/nepali_date/nepali_date';
 import { theme } from './utlis/colors';
 import Footer from './core/Footer';
 
-export interface NepaliDatePickerProps {
+interface SingleNepaliDatePickerProps
+  extends Omit<ICalendarProps, 'onDateSelect'> {
   open: boolean;
-  date: NepaliDate;
   onApply: (date: NepaliDate) => void;
   onClose: () => any;
-  minDate?: NepaliDate;
-  maxDate?: NepaliDate;
+  mode: 'single';
 }
+
+interface MultiNepaliDatePickerProps
+  extends Omit<ICalendarProps, 'onDateSelect'> {
+  open: boolean;
+  mode: 'multi';
+  onClose: () => any;
+  onApply: (dates: Array<NepaliDate>) => void;
+}
+
+export type NepaliDatePickerProps =
+  | SingleNepaliDatePickerProps
+  | MultiNepaliDatePickerProps;
 
 const Datepicker = ({
   open,
-  date,
+  date = new NepaliDate(),
   onApply,
   onClose,
   minDate,
   maxDate,
+  mode,
+  dates = [],
 }: NepaliDatePickerProps) => {
-  const [selectedDate, setSelectedDate] = useState(date);
+  const [selectedDate, setSelectedDate] = useState<NepaliDate>(date);
+  const [selectedDates, setSelectedDates] = useState(dates);
 
   const OS = Platform.OS === 'ios' ? 'ios' : 'android';
 
@@ -41,6 +55,26 @@ const Datepicker = ({
     }
   }, [open]);
 
+  const onDateSelect = useCallback(
+    (new_date: NepaliDate) => {
+      if (mode === 'multi') {
+        setSelectedDates((p) => {
+          if (p.findIndex((item) => item.isEqual(new_date)) > -1) {
+            return p.filter((item) => !item.isEqual(new_date));
+          } else {
+            return [...p, new_date];
+          }
+        });
+      } else {
+        setSelectedDate(new_date);
+      }
+    },
+    [mode]
+  );
+
+  const onClear = useCallback(() => {
+    setSelectedDates([]);
+  }, []);
   return (
     <Modal
       visible={open}
@@ -90,9 +124,22 @@ const Datepicker = ({
                 date={selectedDate}
                 minDate={minDate}
                 maxDate={maxDate}
-                onDateSelect={(d) => setSelectedDate(d)}
+                mode={mode}
+                dates={selectedDates}
+                onDateSelect={onDateSelect}
               />
-              <Footer onApply={() => onApply(selectedDate)} onClose={onClose} />
+              <Footer
+                onClear={onClear}
+                mode={mode}
+                onApply={() => {
+                  if (mode === 'single') {
+                    onApply(selectedDate);
+                  } else {
+                    onApply(selectedDates);
+                  }
+                }}
+                onClose={onClose}
+              />
             </View>
           </View>
         </View>

@@ -21,7 +21,7 @@ const Day = ({
 
   return (
     <Pressable
-      disabled={isSelected || isDisabled}
+      disabled={isDisabled}
       onPress={() => onSelect(day)}
       style={{ width: '14.28%', padding: 4 }}
     >

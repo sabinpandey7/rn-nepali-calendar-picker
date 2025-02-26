@@ -9,6 +9,16 @@ import { ActionTypes } from '../context/CalendarReducer';
 import Controller from './Controller';
 import NepaliDate from '../../../lib/nepali_date/nepali_date';
 
+export type ModeType = 'single' | 'multi' | 'range';
+export interface ICalendarProps {
+  date?: NepaliDate;
+  minDate?: NepaliDate;
+  maxDate?: NepaliDate;
+  mode?: ModeType;
+  dates?: Array<NepaliDate>;
+  onDateSelect: (date: NepaliDate) => any;
+}
+
 const CalendarContainer = () => {
   const {
     state: { activeMonth, activeYear, view },
@@ -44,17 +54,16 @@ const Calendar = ({
   onDateSelect,
   maxDate,
   minDate,
-}: {
-  date: NepaliDate;
-  minDate?: NepaliDate;
-  maxDate?: NepaliDate;
-  onDateSelect: (date: NepaliDate) => any;
-}) => {
+  mode = 'single',
+  dates = [],
+}: ICalendarProps) => {
   return (
     <CalendarContextProvider
       minDate={minDate}
       maxDate={maxDate}
-      selectedDate={date}
+      date={date}
+      mode={mode}
+      dates={dates}
       onDateSelect={onDateSelect}
     >
       <CalendarContainer />
