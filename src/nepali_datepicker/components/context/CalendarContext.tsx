@@ -38,12 +38,14 @@ const CalendarContextProvider = ({
   minDate,
   maxDate,
   mode = 'single',
-  dates,
+  dates = [],
   lang = 'en',
 }: PropsWithChildren<ICalendarProps>) => {
   const [state, dispatch] = useReducer(reducer, {
-    activeMonth: date?.getMonth(),
-    activeYear: date?.getYear(),
+    activeMonth:
+      mode !== 'single' && dates[0] ? dates[0].getMonth() : date.getMonth(),
+    activeYear:
+      mode !== 'single' && dates[0] ? dates[0].getYear() : date.getYear(),
     today: new NepaliDate(),
     view: 'day',
   });
