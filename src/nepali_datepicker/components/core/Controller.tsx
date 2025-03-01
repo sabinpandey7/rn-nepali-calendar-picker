@@ -11,6 +11,7 @@ import { theme } from '../utlis/colors';
 import { nomenclature } from '../../../lib/nepali_date/data/calendar';
 import { useContext } from 'react';
 import { CalendarContext } from '../context/CalendarContext';
+import { format_numeral } from '../../../lib/nepali_date/helper';
 const left_icon = require('../../../assets/arrow_left_android.png');
 const left_icon_ios = require('../../../assets//arrow_left_ios.png');
 const right_icon = require('../../../assets//arrow_right_android.png');
@@ -29,6 +30,7 @@ function Controller({
 }: ControllerProps) {
   const {
     state: { activeYear, view },
+    lang,
     dispatch,
   } = useContext(CalendarContext);
 
@@ -51,7 +53,8 @@ function Controller({
             color: theme[OS]?.textColor || 'black',
           }}
         >
-          {nomenclature.en.month.long[activeMonth - 1]} {activeYear}
+          {nomenclature[lang].month.long[activeMonth - 1]}{' '}
+          {format_numeral(activeYear.toString(), lang)}
         </Text>
         <Image
           source={OS !== 'ios' ? left_icon : left_icon_ios}

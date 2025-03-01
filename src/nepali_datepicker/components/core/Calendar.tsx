@@ -10,11 +10,13 @@ import Controller from './Controller';
 import NepaliDate from '../../../lib/nepali_date/nepali_date';
 
 export type ModeType = 'single' | 'multi' | 'range';
+export type LangType = 'en' | 'np';
 export interface ICalendarProps {
   date?: NepaliDate;
   minDate?: NepaliDate;
   maxDate?: NepaliDate;
-  mode?: ModeType;
+  mode: ModeType;
+  lang: LangType;
   dates?: Array<NepaliDate>;
   onDateSelect: (date: NepaliDate) => any;
 }
@@ -56,6 +58,7 @@ const Calendar = ({
   minDate,
   mode = 'single',
   dates = [],
+  lang = 'en',
 }: ICalendarProps) => {
   return (
     <CalendarContextProvider
@@ -64,6 +67,7 @@ const Calendar = ({
       date={date}
       mode={mode}
       dates={dates}
+      lang={lang}
       onDateSelect={onDateSelect}
     >
       <CalendarContainer />

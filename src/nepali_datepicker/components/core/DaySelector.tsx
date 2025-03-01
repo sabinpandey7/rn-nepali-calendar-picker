@@ -13,7 +13,10 @@ import { CalendarContext } from '../context/CalendarContext';
 import NepaliDate from '../../../lib/nepali_date/nepali_date';
 import { theme } from '../utlis/colors';
 
-const weekDays = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+const weekDays = {
+  en: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
+  np: ['आ', 'सो', 'मं', 'बु', 'बि', 'शु', 'श'],
+};
 
 const DaySelector = ({ activeMonth }: { activeMonth: number }) => {
   const {
@@ -23,6 +26,7 @@ const DaySelector = ({ activeMonth }: { activeMonth: number }) => {
     minDate,
     maxDate,
     dates,
+    lang,
     mode,
   } = useContext(CalendarContext);
 
@@ -118,7 +122,7 @@ const DaySelector = ({ activeMonth }: { activeMonth: number }) => {
   );
 
   const renderDay = useCallback(
-    ({ item }: ListRenderItemInfo<IDay>) => {
+    ({ item }: ListRenderItemInfo<Omit<IDay, 'lang'>>) => {
       return (
         <Day
           onSelect={onDayClick}
@@ -129,17 +133,18 @@ const DaySelector = ({ activeMonth }: { activeMonth: number }) => {
           isBetween={item.isBetween}
           isStartDate={item.isStartDate}
           isEndDate={item.isEndDate}
+          lang={lang}
         />
       );
     },
-    [onDayClick]
+    [onDayClick, lang]
   );
 
   return (
     <FlatList
       ListHeaderComponent={
         <View style={styles.week}>
-          {weekDays.map((l, i) => {
+          {weekDays[lang].map((l, i) => {
             return (
               <Text
                 key={i}

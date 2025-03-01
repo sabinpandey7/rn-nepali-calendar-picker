@@ -21,6 +21,7 @@ export default function App() {
         onClose={() => setOpen(false)}
         date={nepali_date}
         mode="single"
+        lang="np"
         minDate={new NepaliDate()}
       />
       <Text>Multples Dates</Text>

@@ -1,5 +1,6 @@
 import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { theme } from '../utlis/colors';
+import { nomenclature } from '../../../lib/nepali_date/data/calendar';
 
 export interface IDay {
   day: number;
@@ -9,6 +10,7 @@ export interface IDay {
   isBetween: boolean;
   isStartDate: boolean;
   isEndDate: boolean;
+  lang: 'en' | 'np';
 }
 
 const Day = ({
@@ -19,13 +21,13 @@ const Day = ({
   isDisabled,
   isBetween,
   isStartDate,
+  lang,
   isEndDate,
 }: IDay & {
   onSelect: (day: number) => void;
 }) => {
   const OS = Platform.OS === 'ios' ? 'ios' : 'android';
 
-  console.log(theme[OS].rangeBackground);
   return (
     <Pressable
       disabled={isDisabled}
@@ -66,7 +68,7 @@ const Day = ({
             },
           ]}
         >
-          {day ? day : ''}
+          {day ? nomenclature[lang].number[day] : ''}
         </Text>
       </View>
       {(isStartDate || isEndDate) && (

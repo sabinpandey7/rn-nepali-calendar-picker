@@ -85,6 +85,7 @@ The `<Datepicker />` component accepts the following props:
 | `onApply` | `(date: NepaliDate\|NepaliDate[]) => void` | ✅       | -        | Callback function after clicking confirm . This returned Nepali Date Object or array of Nepali Date object based on mode |
 | `onClose` | `() => void`                               | ✅       | -        | Callback function triggered when the datepicker is closed.                                                               |
 | `mode`    | `single \| multi \| range`                 |          | `single` | Datepicker mode                                                                                                          |
+| `lang`    | `en \| np`                                 |          | `en`     | lang mode                                                                                                                |
 | `date`    | `NepaliDate`                               |          | -        | Initial selected date in **Bikram Sambat (BS)** format.                                                                  |
 | `dates`   | `NepaliDate[]`                             |          | []       | Intial selected dates for multi mode                                                                                     |
 | `minDate` | `NepaliDate`                               |          | -        | Min Date                                                                                                                 |

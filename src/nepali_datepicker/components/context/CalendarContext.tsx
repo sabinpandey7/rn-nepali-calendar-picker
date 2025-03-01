@@ -23,6 +23,7 @@ export const CalendarContext = createContext<IContext>({
     view: 'day',
   },
   mode: 'single',
+  lang: 'en',
   onDateSelect: (date: NepaliDate) => {
     console.log(date);
   },
@@ -38,6 +39,7 @@ const CalendarContextProvider = ({
   maxDate,
   mode = 'single',
   dates,
+  lang = 'en',
 }: PropsWithChildren<ICalendarProps>) => {
   const [state, dispatch] = useReducer(reducer, {
     activeMonth: date?.getMonth(),
@@ -57,6 +59,7 @@ const CalendarContextProvider = ({
         maxDate,
         mode,
         dates,
+        lang,
       }}
     >
       {children}

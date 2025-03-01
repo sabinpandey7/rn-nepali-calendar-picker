@@ -3,6 +3,7 @@ import { memo, useCallback, useContext } from 'react';
 import { CalendarContext } from '../context/CalendarContext';
 import { ActionTypes } from '../context/CalendarReducer';
 import { theme } from '../utlis/colors';
+import { format_numeral } from '../../../lib/nepali_date/helper';
 
 const Year = ({ year, isSelected }: { isSelected: boolean; year: number }) => {
   const { dispatch } = useContext(CalendarContext);
@@ -11,6 +12,8 @@ const Year = ({ year, isSelected }: { isSelected: boolean; year: number }) => {
     dispatch({ type: ActionTypes.setYear, payload: year });
   }, [dispatch, year]);
 
+  const os = Platform.OS === 'ios' ? 'ios' : 'android';
+
   return (
     <View style={styles.yearCellWrapper}>
       <Pressable
@@ -18,19 +21,17 @@ const Year = ({ year, isSelected }: { isSelected: boolean; year: number }) => {
         style={[
           styles.yearCell,
           {
-            backgroundColor: isSelected
-              ? theme[Platform.OS]?.primary
-              : 'transparent',
+            backgroundColor: isSelected ? theme[os]?.primary : 'transparent',
           },
         ]}
       >
         <Text
           style={[
             styles.label,
-            { color: isSelected ? 'white' : theme[Platform.OS]?.textColor },
+            { color: isSelected ? 'white' : theme[os]?.textColor },
           ]}
         >
-          {year}
+          {format_numeral(year.toString(), 'np')}
         </Text>
       </Pressable>
     </View>

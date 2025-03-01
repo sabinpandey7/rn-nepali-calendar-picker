@@ -13,7 +13,8 @@ import { theme } from './utlis/colors';
 import Footer from './core/Footer';
 
 interface SingleNepaliDatePickerProps
-  extends Omit<ICalendarProps, 'onDateSelect'> {
+  extends Omit<ICalendarProps, 'onDateSelect' | 'lang'> {
+  lang?: 'en' | 'np';
   open: boolean;
   onApply: (date: NepaliDate) => void;
   onClose: () => any;
@@ -21,7 +22,8 @@ interface SingleNepaliDatePickerProps
 }
 
 interface MultiNepaliDatePickerProps
-  extends Omit<ICalendarProps, 'onDateSelect'> {
+  extends Omit<ICalendarProps, 'onDateSelect' | 'lang'> {
+  lang?: 'en' | 'np';
   open: boolean;
   mode: 'multi' | 'range';
   onClose: () => any;
@@ -41,6 +43,7 @@ const Datepicker = ({
   maxDate,
   mode,
   dates = [],
+  lang = 'en',
 }: NepaliDatePickerProps) => {
   const [selectedDate, setSelectedDate] = useState<NepaliDate>(date);
   const [selectedDates, setSelectedDates] = useState(dates);
@@ -121,7 +124,7 @@ const Datepicker = ({
                   Select Date
                 </Text>
                 <Text style={{ fontSize: 28, fontWeight: 400 }}>
-                  {selectedDate.toFormat('W, MMMM DD')}
+                  {selectedDate.toFormat('W, MMMM DD', lang)}
                 </Text>
               </View>
             )}
@@ -139,6 +142,7 @@ const Datepicker = ({
                 mode={mode}
                 dates={selectedDates}
                 onDateSelect={onDateSelect}
+                lang={lang}
               />
               <Footer
                 onClear={onClear}
