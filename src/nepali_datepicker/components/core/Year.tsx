@@ -6,7 +6,7 @@ import { theme } from '../utlis/colors';
 import { format_numeral } from '../../../lib/nepali_date/helper';
 
 const Year = ({ year, isSelected }: { isSelected: boolean; year: number }) => {
-  const { dispatch } = useContext(CalendarContext);
+  const { dispatch, lang } = useContext(CalendarContext);
   const onYearSelect = useCallback(() => {
     dispatch({ type: ActionTypes.switchView, payload: 'day' });
     dispatch({ type: ActionTypes.setYear, payload: year });
@@ -31,7 +31,7 @@ const Year = ({ year, isSelected }: { isSelected: boolean; year: number }) => {
             { color: isSelected ? 'white' : theme[os]?.textColor },
           ]}
         >
-          {format_numeral(year.toString(), 'np')}
+          {format_numeral(year.toString(), lang)}
         </Text>
       </Pressable>
     </View>
