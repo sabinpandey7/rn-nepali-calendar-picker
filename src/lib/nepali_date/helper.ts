@@ -145,7 +145,10 @@ export function format(date: NepaliDate, pattern: string, lang: 'en' | 'np') {
         case 'MMMM':
           return nomenclature[lang].month.long[date.getMonth() - 1];
         case 'DD':
-          return nomenclature[lang].number[date.getDate()].padStart(2, '0');
+          return nomenclature[lang].number[date.getDate()].padStart(
+            2,
+            lang == 'en' ? '0' : '०'
+          );
         case 'W':
           return nomenclature[lang].day.short[date.getDay()];
         case 'WW':

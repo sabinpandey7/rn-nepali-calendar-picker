@@ -1,4 +1,4 @@
-import { Platform, Pressable, Text, View } from 'react-native';
+import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { theme } from '../utlis/colors';
 
 function Footer({
@@ -20,13 +20,13 @@ function Footer({
         justifyContent: OS !== 'ios' ? 'flex-end' : 'space-between',
         flexDirection: 'row',
         marginTop: 'auto',
-        paddingBottom: 16,
+        marginBottom: 16,
         paddingHorizontal: 16,
-        gap: 32,
+        gap: 16,
       }}
     >
       {mode === 'multi' && (
-        <Pressable onPress={onClear}>
+        <Pressable onPress={onClear} style={styles.btn}>
           <Text
             style={{
               fontSize: 16,
@@ -38,7 +38,7 @@ function Footer({
           </Text>
         </Pressable>
       )}
-      <Pressable onPress={onClose}>
+      <Pressable onPress={onClose} style={styles.btn}>
         <Text
           style={{
             fontSize: 16,
@@ -54,6 +54,7 @@ function Footer({
           onApply();
           onClose();
         }}
+        style={styles.btn}
       >
         <Text
           style={{
@@ -70,3 +71,12 @@ function Footer({
 }
 
 export default Footer;
+
+const styles = StyleSheet.create({
+  btn: {
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+  },
+});
