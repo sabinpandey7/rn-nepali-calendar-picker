@@ -1,5 +1,5 @@
 import { Datepicker, NepaliDate } from 'rn-nepali-calendar-picker';
-import { Text, StyleSheet, SafeAreaView, Button } from 'react-native';
+import { Text, StyleSheet, Button, View } from 'react-native';
 import { useState } from 'react';
 
 export default function App() {
@@ -12,7 +12,7 @@ export default function App() {
   const [openRange, setOpenRange] = useState<boolean>(false);
 
   return (
-    <SafeAreaView style={styles.screen}>
+    <View style={styles.screen}>
       <Text>{nepali_date.toString()}</Text>
       <Button title="Open Datepicker" onPress={() => setOpen(true)} />
       <Datepicker
@@ -56,7 +56,7 @@ export default function App() {
         mode="range"
         minDate={new NepaliDate()}
       />
-    </SafeAreaView>
+    </View>
   );
 }
 
