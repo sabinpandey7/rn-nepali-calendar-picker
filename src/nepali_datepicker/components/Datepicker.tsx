@@ -7,7 +7,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import { memo, useCallback, useEffect, useState } from 'react';
-import Calendar, { type ICalendarProps } from './core/Calendar';
+import { PickerCalendar, type ICalendarProps } from './core/Calendar';
 import NepaliDate from '../../lib/nepali_date/nepali_date';
 import { theme } from './utlis/colors';
 import Footer from './core/Footer';
@@ -135,7 +135,7 @@ const Datepicker = ({
                 height: width > 700 ? '100%' : undefined,
               }}
             >
-              <Calendar
+              <PickerCalendar
                 date={selectedDate}
                 minDate={minDate}
                 maxDate={maxDate}

@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native';
 import { useCallback, useContext, useMemo } from 'react';
-import Day, { type IDay } from './Day';
+import Day, { type IDay, type IEvent } from './Day';
 import { calendarData } from '../../../lib/nepali_date/data/calendar';
 import { CalendarContext } from '../context/CalendarContext';
 import NepaliDate from '../../../lib/nepali_date/nepali_date';
@@ -18,7 +18,13 @@ const weekDays = {
   np: ['आ', 'सो', 'मं', 'बु', 'बि', 'शु', 'श'],
 };
 
-const DaySelector = ({ activeMonth }: { activeMonth: number }) => {
+const DaySelector = ({
+  activeMonth,
+  type,
+}: {
+  activeMonth: number;
+  type: 'picker' | 'calendar';
+}) => {
   const {
     state: { activeYear, today },
     onDateSelect,
@@ -28,6 +34,7 @@ const DaySelector = ({ activeMonth }: { activeMonth: number }) => {
     dates,
     lang,
     mode,
+    events,
   } = useContext(CalendarContext);
 
   const OS = Platform.OS === 'ios' ? 'ios' : 'android';
@@ -49,6 +56,7 @@ const DaySelector = ({ activeMonth }: { activeMonth: number }) => {
         isBetween: false,
         isStartDate: false,
         isEndDate: false,
+        events: [] as Array<IEvent>,
       };
       array.push(item);
     }
@@ -62,25 +70,27 @@ const DaySelector = ({ activeMonth }: { activeMonth: number }) => {
         isBetween: false,
         isStartDate: false,
         isEndDate: false,
+        events: [] as Array<IEvent>,
       };
 
       const nepali_date_item = new NepaliDate(activeYear, activeMonth, i);
       if (mode === 'range') {
-        dates?.forEach((element, index) => {
-          if (nepali_date_item.isEqual(element)) {
-            if (index === 0) {
-              item.isStartDate = true;
-            } else {
-              item.isEndDate = true;
-            }
-            item.isSelected = true;
-          }
-        });
+        const firstElement = dates?.[0];
+        const lastElement = dates?.[dates.length - 1];
+        if (firstElement && nepali_date_item.isEqual(firstElement)) {
+          item.isStartDate = true;
+          item.isSelected = true;
+        }
+        if (lastElement && nepali_date_item.isEqual(lastElement)) {
+          item.isEndDate = true;
+          item.isSelected = true;
+        }
+
         if (dates && dates.length > 1) {
-          if (dates[0] && dates[1]) {
+          if (firstElement && lastElement) {
             if (
-              nepali_date_item.isSmaller(dates[0]) &&
-              nepali_date_item.isGreater(dates[1])
+              nepali_date_item.isSmaller(firstElement) &&
+              nepali_date_item.isGreater(lastElement)
             ) {
               item.isBetween = true;
             }
@@ -108,15 +118,44 @@ const DaySelector = ({ activeMonth }: { activeMonth: number }) => {
       if (maxDate && nepali_date_item.isSmaller(maxDate)) {
         item.isDisabled = true;
       }
+      if (events) {
+        item.events = events?.filter((value) => {
+          if (nepali_date_item?.isEqual(value.date)) {
+            return true;
+          }
+
+          if (value.endDate) {
+            if (
+              nepali_date_item.isEqual(value.endDate) ||
+              (nepali_date_item.isSmaller(value.date) &&
+                nepali_date_item.isGreater(value.endDate))
+            )
+              return true;
+          }
+          return false;
+        });
+      }
 
       array.push(item);
     }
     return array;
-  }, [activeYear, activeMonth, dates, date, today, maxDate, minDate, mode]);
+  }, [
+    activeYear,
+    activeMonth,
+    dates,
+    date,
+    today,
+    maxDate,
+    events,
+    minDate,
+    mode,
+  ]);
 
   const onDayClick = useCallback(
     (day: number) => {
-      onDateSelect(new NepaliDate(activeYear, activeMonth, day));
+      if (onDateSelect) {
+        onDateSelect(new NepaliDate(activeYear, activeMonth, day));
+      }
     },
     [onDateSelect, activeYear, activeMonth]
   );
@@ -133,7 +172,8 @@ const DaySelector = ({ activeMonth }: { activeMonth: number }) => {
           isBetween={item.isBetween}
           isStartDate={item.isStartDate}
           isEndDate={item.isEndDate}
-          lang={lang}
+          lang={lang || 'en'}
+          events={item.events || []}
         />
       );
     },
@@ -142,9 +182,10 @@ const DaySelector = ({ activeMonth }: { activeMonth: number }) => {
 
   return (
     <FlatList
+      scrollEnabled={type === 'picker'}
       ListHeaderComponent={
         <View style={styles.week}>
-          {weekDays[lang].map((l, i) => {
+          {weekDays[lang || 'en'].map((l, i) => {
             return (
               <Text
                 key={i}

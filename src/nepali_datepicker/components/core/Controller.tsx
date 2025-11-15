@@ -53,7 +53,7 @@ function Controller({
             color: theme[OS]?.textColor || 'black',
           }}
         >
-          {nomenclature[lang].month.long[activeMonth - 1]}{' '}
+          {nomenclature[lang || 'en'].month.long[activeMonth - 1]}{' '}
           {format_numeral(activeYear.toString(), lang)}
         </Text>
         <Image

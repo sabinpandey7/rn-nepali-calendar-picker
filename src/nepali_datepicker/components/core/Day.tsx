@@ -1,6 +1,8 @@
 import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
 import { theme } from '../utlis/colors';
 import { nomenclature } from '../../../lib/nepali_date/data/calendar';
+import NepaliDate from '../../../lib/nepali_date/nepali_date';
+import { memo } from 'react';
 
 export interface IDay {
   day: number;
@@ -11,6 +13,14 @@ export interface IDay {
   isStartDate: boolean;
   isEndDate: boolean;
   lang: 'en' | 'np';
+  events: Array<any>;
+}
+
+export interface IEvent {
+  name: string;
+  date: NepaliDate;
+  color: string;
+  endDate?: NepaliDate;
 }
 
 const Day = ({
@@ -23,71 +33,100 @@ const Day = ({
   isStartDate,
   lang,
   isEndDate,
+  events,
 }: IDay & {
   onSelect: (day: number) => void;
 }) => {
   const OS = Platform.OS === 'ios' ? 'ios' : 'android';
-
   return (
-    <Pressable
-      disabled={isDisabled}
-      onPress={() => onSelect(day)}
+    <View
       style={{
         width: '14.28%',
-        backgroundColor: isBetween ? theme[OS].rangeBackground : undefined,
         marginVertical: 2,
       }}
     >
-      <View
-        style={[
-          styles.dayCell,
-          {
-            borderRadius: isToday || isSelected ? 1000 : 0,
-            borderColor: theme[OS].primary,
-            borderWidth: isToday ? 1 : 0,
-            backgroundColor:
-              isToday && !isSelected
-                ? 'white'
-                : isSelected
-                  ? theme[OS].primary
-                  : isBetween
-                    ? theme[OS].rangeBackground
-                    : 'transparent',
-          },
-        ]}
+      <Pressable
+        disabled={isDisabled}
+        onPress={() => onSelect(day)}
+        style={{
+          backgroundColor: isBetween ? theme[OS].rangeBackground : undefined,
+        }}
       >
-        <Text
+        <View
           style={[
-            styles.label,
+            styles.dayCell,
             {
-              color: isDisabled
-                ? 'grey'
-                : isSelected
+              borderRadius: isToday || isSelected ? 1000 : 0,
+              borderColor: theme[OS].primary,
+              borderWidth: isToday ? 1 : 0,
+              backgroundColor:
+                isToday && !isSelected
                   ? 'white'
-                  : theme[OS].textColor,
+                  : isSelected
+                    ? theme[OS].primary
+                    : isBetween
+                      ? theme[OS].rangeBackground
+                      : 'transparent',
             },
           ]}
         >
-          {day ? nomenclature[lang].number[day] : ''}
-        </Text>
+          <Text
+            style={[
+              styles.label,
+              {
+                color: isDisabled
+                  ? 'grey'
+                  : isSelected
+                    ? 'white'
+                    : theme[OS].textColor,
+              },
+            ]}
+          >
+            {day ? nomenclature[lang].number[day] : ''}
+          </Text>
+        </View>
+        {(isStartDate || isEndDate) && (
+          <View
+            style={{
+              backgroundColor: theme[OS].rangeBackground,
+              width: '50%',
+              height: '100%',
+              position: 'absolute',
+              zIndex: -1,
+              right: isStartDate ? 0 : undefined,
+            }}
+          />
+        )}
+      </Pressable>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: 2,
+          flexWrap: 'wrap',
+          maxHeight: 8,
+          overflow: 'hidden',
+        }}
+      >
+        {events?.map((value, index) => (
+          <View
+            key={index}
+            style={{
+              backgroundColor: value.color,
+              width: 8,
+              height: 8,
+              borderRadius: 5,
+            }}
+          />
+        ))}
       </View>
-      {(isStartDate || isEndDate) && (
-        <View
-          style={{
-            backgroundColor: theme[OS].rangeBackground,
-            width: '50%',
-            height: '100%',
-            position: 'absolute',
-            zIndex: -1,
-            right: isStartDate ? 0 : undefined,
-          }}
-        />
-      )}
-    </Pressable>
+    </View>
   );
 };
 
-export default Day;
+export default memo(Day);
 
 const styles = StyleSheet.create({
   dayCell: {

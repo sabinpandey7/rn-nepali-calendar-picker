@@ -1,6 +1,32 @@
-import { Datepicker, NepaliDate } from 'rn-nepali-calendar-picker';
-import { Text, StyleSheet, Button, View } from 'react-native';
+import { Calendar, Datepicker, NepaliDate } from 'rn-nepali-calendar-picker';
+import { Text, StyleSheet, Button, ScrollView } from 'react-native';
 import { useState } from 'react';
+
+const events = [
+  {
+    name: 'Conference',
+    date: new NepaliDate('2082-07-01'),
+    endDate: new NepaliDate('2082-07-03'),
+    color: 'red',
+  },
+  {
+    name: 'Birthday Party ',
+    date: new NepaliDate('2082-07-01'),
+    endDate: new NepaliDate('2082-07-03'),
+    color: 'blue',
+  },
+
+  {
+    name: 'bithday',
+    date: new NepaliDate('2082-07-29'),
+    color: 'green',
+  },
+  {
+    name: 'Conference Day-3',
+    date: new NepaliDate('2082-07-30'),
+    color: 'grenn',
+  },
+];
 
 export default function App() {
   const [nepali_date, setNepaliDate] = useState<NepaliDate>(new NepaliDate());
@@ -12,7 +38,7 @@ export default function App() {
   const [openRange, setOpenRange] = useState<boolean>(false);
 
   return (
-    <View style={styles.screen}>
+    <ScrollView contentContainerStyle={styles.screen}>
       <Text>{nepali_date.toString()}</Text>
       <Button title="Open Datepicker" onPress={() => setOpen(true)} />
       <Datepicker
@@ -56,21 +82,24 @@ export default function App() {
         mode="range"
         minDate={new NepaliDate()}
       />
-    </View>
+
+      {/*raw  calendar with events dot marking  */}
+      <Calendar
+        lang="np"
+        date={nepali_date}
+        events={events}
+        onDateSelect={(date) => setNepaliDate(date)}
+        onDisplayMonthChange={(month, year) => console.log(month, year)} // when active month change
+      />
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   screen: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 16,
     gap: 16,
+    paddingTop: 100,
+    padding: 16,
+    paddingBottom: 40,
   },
 });
