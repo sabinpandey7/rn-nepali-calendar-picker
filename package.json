@@ -1,6 +1,6 @@
 {
   "name": "rn-nepali-calendar-picker",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Nepali Calendar and Datepicker for React-Native Apps",
   "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",
