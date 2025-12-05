@@ -23,9 +23,16 @@ export interface ICalendarProps {
   events?: Array<IEvent>;
   onDateSelect?: (date: NepaliDate) => any;
   onDisplayMonthChange?: (activeMonth: number, activeYear: number) => any;
+  disableYearSelector?: boolean;
 }
 
-const CalendarContainer = ({ type }: { type: 'picker' | 'calendar' }) => {
+const CalendarContainer = ({
+  type,
+  disableYearSelector,
+}: {
+  type: 'picker' | 'calendar';
+  disableYearSelector?: boolean;
+}) => {
   const {
     state: { activeMonth, activeYear, view },
     dispatch,
@@ -54,12 +61,15 @@ const CalendarContainer = ({ type }: { type: 'picker' | 'calendar' }) => {
         activeMonth={activeMonth}
         onPressNext={onPressNext}
         onPressPrev={onPressPrev}
+        disableYearSelector={disableYearSelector}
       />
       {(view === 'day' || type === 'calendar') && (
         <DaySelector type={type} activeMonth={activeMonth} />
       )}
       {type === 'picker' && view === 'year' && (
-        <YearSelector selectedYear={activeYear} />
+        <View style={{ maxHeight: '80%' }}>
+          <YearSelector selectedYear={activeYear} />
+        </View>
       )}
       {type === 'calendar' && (
         <Modal
@@ -75,7 +85,8 @@ const CalendarContainer = ({ type }: { type: 'picker' | 'calendar' }) => {
             <View
               style={{
                 width: '90%',
-                height: '100%',
+                height: '40%',
+                borderRadius: 16,
                 backgroundColor: theme[OS].backgroundColor || 'white',
               }}
             >
@@ -98,6 +109,7 @@ const Calendar = ({
   lang = 'en',
   events = [],
   onDisplayMonthChange,
+  disableYearSelector,
 }: ICalendarProps) => {
   return (
     <CalendarContextProvider
@@ -110,8 +122,12 @@ const Calendar = ({
       events={events}
       onDateSelect={onDateSelect}
       onDisplayMonthChange={onDisplayMonthChange}
+      disableYearSelector
     >
-      <CalendarContainer type="calendar" />
+      <CalendarContainer
+        type="calendar"
+        disableYearSelector={disableYearSelector}
+      />
     </CalendarContextProvider>
   );
 };

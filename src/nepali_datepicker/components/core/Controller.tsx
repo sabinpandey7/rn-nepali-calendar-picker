@@ -21,12 +21,14 @@ interface ControllerProps {
   activeMonth: number;
   onPressNext: () => void;
   onPressPrev: () => void;
+  disableYearSelector?: boolean;
 }
 
 function Controller({
   activeMonth,
   onPressNext,
   onPressPrev,
+  disableYearSelector,
 }: ControllerProps) {
   const {
     state: { activeYear, view },
@@ -38,6 +40,7 @@ function Controller({
   return (
     <View style={styles.controller}>
       <Pressable
+        disabled={disableYearSelector}
         onPress={() =>
           dispatch({
             type: ActionTypes.switchView,
@@ -56,13 +59,15 @@ function Controller({
           {nomenclature[lang || 'en'].month.long[activeMonth - 1]}{' '}
           {format_numeral(activeYear.toString(), lang)}
         </Text>
-        <Image
-          source={OS !== 'ios' ? left_icon : left_icon_ios}
-          style={{
-            ...styles.icon,
-            transform: [{ rotate: '270deg' }],
-          }}
-        />
+        {!disableYearSelector && (
+          <Image
+            source={OS !== 'ios' ? left_icon : left_icon_ios}
+            style={{
+              ...styles.icon,
+              transform: [{ rotate: '270deg' }],
+            }}
+          />
+        )}
       </Pressable>
       <View style={{ flexDirection: 'row' }}>
         <Pressable onPress={onPressPrev}>

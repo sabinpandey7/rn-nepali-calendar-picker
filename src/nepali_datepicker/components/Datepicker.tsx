@@ -115,6 +115,7 @@ const Datepicker = ({
                 backgroundColor: theme[OS].backgroundColor || 'white',
                 flexDirection: width > 700 ? 'row' : 'column',
                 maxHeight: OS === 'ios' ? 420 : 540,
+                overflow: 'hidden',
               },
             ]}
           >
@@ -182,8 +183,6 @@ const styles = StyleSheet.create({
   },
   calendarContainer: {
     width: 320,
-
-    // height: "100%",
   },
   header: {
     paddingBottom: 16,

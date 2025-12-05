@@ -90,6 +90,7 @@ export default function App() {
         events={events}
         onDateSelect={(date) => setNepaliDate(date)}
         onDisplayMonthChange={(month, year) => console.log(month, year)} // when active month change
+        disableYearSelector
       />
     </ScrollView>
   );
