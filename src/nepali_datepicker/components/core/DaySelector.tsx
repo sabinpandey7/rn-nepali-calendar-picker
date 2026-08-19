@@ -1,7 +1,6 @@
 import {
   FlatList,
   type ListRenderItemInfo,
-  Platform,
   StyleSheet,
   Text,
   View,
@@ -11,11 +10,30 @@ import Day, { type IDay, type IEvent } from './Day';
 import { calendarData } from '../../../lib/nepali_date/data/calendar';
 import { CalendarContext } from '../context/CalendarContext';
 import NepaliDate from '../../../lib/nepali_date/nepali_date';
-import { theme } from '../utlis/colors';
+import { useTheme } from '../context/ThemeContext';
 
 const weekDays = {
   en: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
   np: ['आ', 'सो', 'मं', 'बु', 'बि', 'शु', 'श'],
+};
+
+/**
+ * Turns a highlight key into the padded `YYYY-MM-DD` form `NepaliDate.toString()`
+ * produces, so `2081-5-3` and `2081-05-03` both match. Returns null when the
+ * value isn't a date at all — a bad entry is skipped rather than crashing render.
+ */
+const normalizeDateKey = (value: string) => {
+  const match = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(value.trim());
+  if (!match) {
+    return null;
+  }
+  const [, year, month, date] = match as unknown as [
+    string,
+    string,
+    string,
+    string,
+  ];
+  return `${year}-${month.padStart(2, '0')}-${date.padStart(2, '0')}`;
 };
 
 const DaySelector = ({
@@ -35,9 +53,25 @@ const DaySelector = ({
     lang,
     mode,
     events,
+    highlights,
   } = useContext(CalendarContext);
 
-  const OS = Platform.OS === 'ios' ? 'ios' : 'android';
+  const colors = useTheme();
+
+  const highlightMap = useMemo(() => {
+    const map = new Map<string, string>();
+    Object.entries(highlights ?? {}).forEach(([highlightDate, color]) => {
+      const key = normalizeDateKey(highlightDate);
+      if (key) {
+        map.set(key, color);
+      } else if (__DEV__) {
+        console.warn(
+          `[rn-nepali-calendar-picker] Ignoring highlight "${highlightDate}": expected format YYYY-MM-DD.`
+        );
+      }
+    });
+    return map;
+  }, [highlights]);
 
   const dayGrids = useMemo(() => {
     const numofdays = calendarData[activeYear][0][activeMonth - 1];
@@ -57,6 +91,7 @@ const DaySelector = ({
         isStartDate: false,
         isEndDate: false,
         events: [] as Array<IEvent>,
+        highlightColor: undefined as string | undefined,
       };
       array.push(item);
     }
@@ -71,9 +106,11 @@ const DaySelector = ({
         isStartDate: false,
         isEndDate: false,
         events: [] as Array<IEvent>,
+        highlightColor: undefined as string | undefined,
       };
 
       const nepali_date_item = new NepaliDate(activeYear, activeMonth, i);
+      item.highlightColor = highlightMap.get(nepali_date_item.toString());
       if (mode === 'range') {
         const firstElement = dates?.[0];
         const lastElement = dates?.[dates.length - 1];
@@ -149,6 +186,7 @@ const DaySelector = ({
     events,
     minDate,
     mode,
+    highlightMap,
   ]);
 
   const onDayClick = useCallback(
@@ -174,6 +212,7 @@ const DaySelector = ({
           isEndDate={item.isEndDate}
           lang={lang || 'en'}
           events={item.events || []}
+          highlightColor={item.highlightColor}
         />
       );
     },
@@ -191,7 +230,7 @@ const DaySelector = ({
                 key={i}
                 style={{
                   ...styles.btn,
-                  color: OS === 'ios' ? 'darkgrey' : theme[OS].textColor,
+                  color: colors.weekdayTextColor,
                 }}
               >
                 {l}

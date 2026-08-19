@@ -42,6 +42,7 @@ const CalendarContextProvider = ({
   lang = 'en',
   onDisplayMonthChange,
   events,
+  highlights,
 }: PropsWithChildren<ICalendarProps>) => {
   const [state, dispatch] = useReducer(reducer, {
     activeMonth:
@@ -65,6 +66,7 @@ const CalendarContextProvider = ({
         dates,
         lang,
         events,
+        highlights,
         onDisplayMonthChange,
       }}
     >

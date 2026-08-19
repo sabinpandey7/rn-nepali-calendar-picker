@@ -1,5 +1,5 @@
-import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
-import { theme } from '../utlis/colors';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { useTheme } from '../context/ThemeContext';
 import { nomenclature } from '../../../lib/nepali_date/data/calendar';
 import NepaliDate from '../../../lib/nepali_date/nepali_date';
 import { memo } from 'react';
@@ -14,7 +14,12 @@ export interface IDay {
   isEndDate: boolean;
   lang: 'en' | 'np';
   events: Array<any>;
+  /** Per-date text color from the `highlights` prop, overrides `theme.textColor`. */
+  highlightColor?: string;
 }
+
+/** Map of `'YYYY-MM-DD'` to text color, accepted by the `highlights` prop. */
+export type IHighlights = Record<string, string>;
 
 export interface IEvent {
   name: string;
@@ -34,10 +39,11 @@ const Day = ({
   lang,
   isEndDate,
   events,
+  highlightColor,
 }: IDay & {
   onSelect: (day: number) => void;
 }) => {
-  const OS = Platform.OS === 'ios' ? 'ios' : 'android';
+  const colors = useTheme();
   return (
     <View
       style={{
@@ -49,7 +55,7 @@ const Day = ({
         disabled={isDisabled}
         onPress={() => onSelect(day)}
         style={{
-          backgroundColor: isBetween ? theme[OS].rangeBackground : undefined,
+          backgroundColor: isBetween ? colors.rangeBackground : undefined,
         }}
       >
         <View
@@ -57,15 +63,15 @@ const Day = ({
             styles.dayCell,
             {
               borderRadius: isToday || isSelected ? 1000 : 0,
-              borderColor: theme[OS].primary,
+              borderColor: colors.primary,
               borderWidth: isToday ? 1 : 0,
               backgroundColor:
                 isToday && !isSelected
-                  ? 'white'
+                  ? colors.todayBackground
                   : isSelected
-                    ? theme[OS].primary
+                    ? colors.primary
                     : isBetween
-                      ? theme[OS].rangeBackground
+                      ? colors.rangeBackground
                       : 'transparent',
             },
           ]}
@@ -75,10 +81,10 @@ const Day = ({
               styles.label,
               {
                 color: isDisabled
-                  ? 'grey'
+                  ? colors.disabledTextColor
                   : isSelected
-                    ? 'white'
-                    : theme[OS].textColor,
+                    ? colors.onPrimary
+                    : (highlightColor ?? colors.textColor),
               },
             ]}
           >
@@ -88,7 +94,7 @@ const Day = ({
         {(isStartDate || isEndDate) && (
           <View
             style={{
-              backgroundColor: theme[OS].rangeBackground,
+              backgroundColor: colors.rangeBackground,
               width: '50%',
               height: '100%',
               position: 'absolute',

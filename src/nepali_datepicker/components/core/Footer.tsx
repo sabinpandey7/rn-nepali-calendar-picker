@@ -1,5 +1,5 @@
 import { Platform, Pressable, StyleSheet, Text, View } from 'react-native';
-import { theme } from '../utlis/colors';
+import { useTheme } from '../context/ThemeContext';
 
 function Footer({
   onApply,
@@ -13,6 +13,7 @@ function Footer({
   mode: 'single' | 'multi' | 'range';
 }) {
   const OS = Platform.OS === 'ios' ? 'ios' : 'android';
+  const colors = useTheme();
 
   return (
     <View
@@ -31,7 +32,7 @@ function Footer({
             style={{
               fontSize: 16,
               fontWeight: 500,
-              color: theme[OS].primary,
+              color: colors.primary,
             }}
           >
             Clear
@@ -43,7 +44,7 @@ function Footer({
           style={{
             fontSize: 16,
             fontWeight: 500,
-            color: theme[OS].primary,
+            color: colors.primary,
           }}
         >
           Cancel
@@ -60,7 +61,7 @@ function Footer({
           style={{
             fontSize: 16,
             fontWeight: 500,
-            color: theme[OS].primary,
+            color: colors.primary,
           }}
         >
           Confirm

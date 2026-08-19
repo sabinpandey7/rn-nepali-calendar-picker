@@ -9,7 +9,7 @@ import {
 import { memo, useCallback, useEffect, useState } from 'react';
 import { PickerCalendar, type ICalendarProps } from './core/Calendar';
 import NepaliDate from '../../lib/nepali_date/nepali_date';
-import { theme } from './utlis/colors';
+import ThemeProvider, { useTheme } from './context/ThemeContext';
 import Footer from './core/Footer';
 
 interface SingleNepaliDatePickerProps
@@ -34,7 +34,7 @@ export type NepaliDatePickerProps =
   | SingleNepaliDatePickerProps
   | MultiNepaliDatePickerProps;
 
-const Datepicker = ({
+const DatepickerContent = ({
   open,
   date = new NepaliDate(),
   onApply,
@@ -44,11 +44,14 @@ const Datepicker = ({
   mode,
   dates = [],
   lang = 'en',
+  events = [],
+  highlights,
 }: NepaliDatePickerProps) => {
   const [selectedDate, setSelectedDate] = useState<NepaliDate>(date);
   const [selectedDates, setSelectedDates] = useState(dates);
 
   const OS = Platform.OS === 'ios' ? 'ios' : 'android';
+  const colors = useTheme();
 
   const { width } = useWindowDimensions();
   const [load, setLoad] = useState<boolean>(false);
@@ -105,6 +108,7 @@ const Datepicker = ({
         <View
           style={{
             ...styles.screen,
+            backgroundColor: colors.backdropColor,
             justifyContent: OS === 'ios' ? 'flex-end' : 'center',
           }}
         >
@@ -112,7 +116,7 @@ const Datepicker = ({
             style={[
               styles.pickerContainer,
               {
-                backgroundColor: theme[OS].backgroundColor || 'white',
+                backgroundColor: colors.backgroundColor,
                 flexDirection: width > 700 ? 'row' : 'column',
                 maxHeight: OS === 'ios' ? 420 : 540,
                 overflow: 'hidden',
@@ -120,11 +124,25 @@ const Datepicker = ({
             ]}
           >
             {OS === 'android' && (
-              <View style={styles.header}>
-                <Text style={{ fontSize: 14, fontWeight: 500 }}>
+              <View
+                style={[styles.header, { borderColor: colors.borderColor }]}
+              >
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontWeight: 500,
+                    color: colors.textColor,
+                  }}
+                >
                   Select Date
                 </Text>
-                <Text style={{ fontSize: 28, fontWeight: 400 }}>
+                <Text
+                  style={{
+                    fontSize: 28,
+                    fontWeight: 400,
+                    color: colors.textColor,
+                  }}
+                >
                   {selectedDate.toFormat('W, MMMM DD', lang)}
                 </Text>
               </View>
@@ -144,6 +162,8 @@ const Datepicker = ({
                 dates={selectedDates}
                 onDateSelect={onDateSelect}
                 lang={lang}
+                events={events}
+                highlights={highlights}
               />
               <Footer
                 onClear={onClear}
@@ -165,6 +185,12 @@ const Datepicker = ({
   );
 };
 
+const Datepicker = (props: NepaliDatePickerProps) => (
+  <ThemeProvider theme={props.theme} colorScheme={props.colorScheme}>
+    <DatepickerContent {...props} />
+  </ThemeProvider>
+);
+
 export default memo(Datepicker);
 
 const styles = StyleSheet.create({
@@ -172,12 +198,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(52, 52, 52, 0.5)',
     paddingVertical: 16,
     paddingBottom: Platform.OS === 'ios' ? 64 : 16,
   },
   pickerContainer: {
-    backgroundColor: 'white',
     borderRadius: 12,
     elevation: 12,
   },
@@ -187,7 +211,6 @@ const styles = StyleSheet.create({
   header: {
     paddingBottom: 16,
     borderBottomWidth: 1,
-    borderColor: '#CAC4D0',
     padding: 16,
     gap: 16,
   },

@@ -7,7 +7,7 @@ import {
   Platform,
 } from 'react-native';
 import { ActionTypes } from '../context/CalendarReducer';
-import { theme } from '../utlis/colors';
+import { useTheme } from '../context/ThemeContext';
 import { nomenclature } from '../../../lib/nepali_date/data/calendar';
 import { useContext } from 'react';
 import { CalendarContext } from '../context/CalendarContext';
@@ -37,6 +37,7 @@ function Controller({
   } = useContext(CalendarContext);
 
   const OS = Platform.OS === 'ios' ? 'ios' : 'android';
+  const colors = useTheme();
   return (
     <View style={styles.controller}>
       <Pressable
@@ -53,7 +54,7 @@ function Controller({
           style={{
             fontSize: 14,
             fontWeight: 500,
-            color: theme[OS]?.textColor || 'black',
+            color: colors.textColor,
           }}
         >
           {nomenclature[lang || 'en'].month.long[activeMonth - 1]}{' '}
@@ -64,6 +65,7 @@ function Controller({
             source={OS !== 'ios' ? left_icon : left_icon_ios}
             style={{
               ...styles.icon,
+              tintColor: colors.iconColor,
               transform: [{ rotate: '270deg' }],
             }}
           />
@@ -73,13 +75,13 @@ function Controller({
         <Pressable onPress={onPressPrev}>
           <Image
             source={OS !== 'ios' ? left_icon : left_icon_ios}
-            style={styles.icon}
+            style={[styles.icon, { tintColor: colors.iconColor }]}
           />
         </Pressable>
         <Pressable onPress={onPressNext}>
           <Image
             source={OS !== 'ios' ? right_icon : right_icon_ios}
-            style={styles.icon}
+            style={[styles.icon, { tintColor: colors.iconColor }]}
           />
         </Pressable>
       </View>

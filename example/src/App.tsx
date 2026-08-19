@@ -91,6 +91,16 @@ export default function App() {
         onDateSelect={(date) => setNepaliDate(date)}
         onDisplayMonthChange={(month, year) => console.log(month, year)} // when active month change
         disableYearSelector
+        highlights={{
+          '2083-05-06': 'red',
+          '2083-05-07': 'red',
+          '2083-05-14': 'red',
+          '2083-05-21': 'red',
+          '2083-05-28': 'red',
+          '2083-05-13': 'red',
+          '2083-05-20': 'red',
+          '2083-05-27': 'red',
+        }}
       />
     </ScrollView>
   );

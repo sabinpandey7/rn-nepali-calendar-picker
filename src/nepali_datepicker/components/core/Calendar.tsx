@@ -1,4 +1,4 @@
-import { Modal, Platform, View } from 'react-native';
+import { Modal, View } from 'react-native';
 import { memo, useCallback, useContext, useEffect } from 'react';
 import DaySelector from './DaySelector';
 import YearSelector from './YearSelector';
@@ -8,12 +8,15 @@ import CalendarContextProvider, {
 import { ActionTypes } from '../context/CalendarReducer';
 import Controller from './Controller';
 import NepaliDate from '../../../lib/nepali_date/nepali_date';
-import type { IEvent } from './Day';
-import { theme } from '../utlis/colors';
+import type { IEvent, IHighlights } from './Day';
+import ThemeProvider, {
+  type ThemeProps,
+  useTheme,
+} from '../context/ThemeContext';
 
 export type ModeType = 'single' | 'multi' | 'range';
 export type LangType = 'en' | 'np';
-export interface ICalendarProps {
+export interface ICalendarProps extends ThemeProps {
   date?: NepaliDate;
   minDate?: NepaliDate;
   maxDate?: NepaliDate;
@@ -21,6 +24,11 @@ export interface ICalendarProps {
   lang?: LangType;
   dates?: Array<NepaliDate>;
   events?: Array<IEvent>;
+  /**
+   * Per-date text colors keyed by `'YYYY-MM-DD'`. Takes precedence over
+   * `theme.textColor` for those day cells.
+   */
+  highlights?: IHighlights;
   onDateSelect?: (date: NepaliDate) => any;
   onDisplayMonthChange?: (activeMonth: number, activeYear: number) => any;
   disableYearSelector?: boolean;
@@ -53,7 +61,7 @@ const CalendarContainer = ({
   const onPressNext = useCallback(() => {
     dispatch({ type: ActionTypes.changeMonth, payload: 'increment' });
   }, [dispatch]);
-  const OS = Platform.OS === 'ios' ? 'ios' : 'android';
+  const colors = useTheme();
 
   return (
     <View>
@@ -87,7 +95,7 @@ const CalendarContainer = ({
                 width: '90%',
                 height: '40%',
                 borderRadius: 16,
-                backgroundColor: theme[OS].backgroundColor || 'white',
+                backgroundColor: colors.backgroundColor,
               }}
             >
               <YearSelector selectedYear={activeYear} />
@@ -110,25 +118,31 @@ const Calendar = ({
   events = [],
   onDisplayMonthChange,
   disableYearSelector,
+  highlights,
+  theme,
+  colorScheme,
 }: ICalendarProps) => {
   return (
-    <CalendarContextProvider
-      minDate={minDate}
-      maxDate={maxDate}
-      date={date}
-      mode={mode}
-      dates={dates}
-      lang={lang}
-      events={events}
-      onDateSelect={onDateSelect}
-      onDisplayMonthChange={onDisplayMonthChange}
-      disableYearSelector
-    >
-      <CalendarContainer
-        type="calendar"
-        disableYearSelector={disableYearSelector}
-      />
-    </CalendarContextProvider>
+    <ThemeProvider theme={theme} colorScheme={colorScheme}>
+      <CalendarContextProvider
+        minDate={minDate}
+        maxDate={maxDate}
+        date={date}
+        mode={mode}
+        dates={dates}
+        lang={lang}
+        events={events}
+        highlights={highlights}
+        onDateSelect={onDateSelect}
+        onDisplayMonthChange={onDisplayMonthChange}
+        disableYearSelector
+      >
+        <CalendarContainer
+          type="calendar"
+          disableYearSelector={disableYearSelector}
+        />
+      </CalendarContextProvider>
+    </ThemeProvider>
   );
 };
 export const PickerCalendar = memo(
@@ -141,6 +155,7 @@ export const PickerCalendar = memo(
     dates = [],
     lang = 'en',
     events = [],
+    highlights,
   }: ICalendarProps) => {
     return (
       <CalendarContextProvider
@@ -151,6 +166,7 @@ export const PickerCalendar = memo(
         dates={dates}
         lang={lang}
         events={events}
+        highlights={highlights}
         onDateSelect={onDateSelect}
       >
         <CalendarContainer type="picker" />
